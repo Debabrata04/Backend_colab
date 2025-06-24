@@ -105,29 +105,23 @@ const { getDatabase, ref, push, set, onValue } = require('firebase/database');
 const app = express();
 
 // CORS configuration - using environment variable
+
+
 const allowedOrigins = [
   'https://realtime-colab-whiteboard.netlify.app',
+  'https://backendcolab-production-f82d.up.railway.app',
   'http://localhost:3000'
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type'],
   credentials: true
 }));
 
 // Handle preflight requests
-app.options('*', cors());
+app.options('*', cors()); // Enable OPTIONS for all routes
 
 app.use(express.json());
 
