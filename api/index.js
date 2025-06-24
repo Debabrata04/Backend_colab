@@ -107,20 +107,16 @@ const app = express();
 // CORS configuration - using environment variable
 const allowedOrigins = [
   'http://localhost:3000',
-  process.env.FRONTEND_URL // Set in Vercel dashboard
+  'https://realtime-colab-whiteboard.netlify.app',
+  'https://backendcolab-production-f82d.up.railway.app'
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error('Blocked by CORS:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
   credentials: true
 }));
+
 app.use(express.json());
 
 // Initialize Firebase
@@ -158,14 +154,19 @@ app.post('/api/rooms', (req, res) => {
   
   set(newRoomRef, roomData)
     .then(() => {
+      console.log("Room created successfully:", newRoomRef.key);
       res.json({
         roomId: newRoomRef.key,
         secret
       });
     })
     .catch(error => {
-      console.error("Error creating room:", error);
-      res.status(500).json({ error: "Room creation failed" });
+      console.error("Firebase Error:", error);
+      console.error("Firebase Config:", firebaseConfig);
+      res.status(500).json({ 
+        error: "Room creation failed",
+        details: error.message 
+      });
     });
 });
 
