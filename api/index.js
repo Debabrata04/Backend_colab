@@ -101,7 +101,8 @@ const cors = require('cors');
 const crypto = require('crypto'); // Added Node.js crypto module
 const { initializeApp } = require('firebase/app');
 const { getDatabase, ref, push, set, onValue } = require('firebase/database');
-
+const PORT = process.env.PORT || 8000; // Railway injects PORT
+app.listen(PORT, () => console.log(`Running on port ${PORT}`));
 const app = express();
 
 // CORS configuration - using environment variable
@@ -137,8 +138,14 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getDatabase(firebaseApp);
+try {
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getDatabase(firebaseApp);
+  console.log("Firebase initialized!"); // Check logs for this
+} catch (err) {
+  console.error("Firebase init error:", err);
+  process.exit(1); // Crash immediately if Firebase fails
+}
 
 // Generate random secret using Node.js crypto
 function generateSecret() {
