@@ -6,7 +6,7 @@
     "start": "node api/index.js"
   },
   "dependencies": {
-    "@vercel/node": "^4.0.4",
+    "@vercel/node": "^3.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
